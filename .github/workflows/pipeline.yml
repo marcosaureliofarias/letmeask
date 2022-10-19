@@ -1,0 +1,38 @@
+on:
+  push:
+    branches: [button]
+  pull_request:
+    branches: [button]
+
+name: projeto-react
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    env:
+      AWS_REGION: us-east-2
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Aplication dependency
+        run: yarn install
+
+      - name: Aplication build
+        run: yarn build
+
+      - name: S3 bucket
+        run: cd dist && aws s3 cp ./ s3://marcosfotos --recursive
+
+      - name: Deploy atw-react
+        run: echo deploy success
