@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: letmask
+spec:
+  selector:
+    matchLabels:
+      app: letmask
+  template:
+    metadata:
+      labels:
+        app: letmask
+    spec:
+      containers:
+      - name: letmask
+        image: marcosaureliofarias/letmeask
+        ports:
+        - containerPort: 80
