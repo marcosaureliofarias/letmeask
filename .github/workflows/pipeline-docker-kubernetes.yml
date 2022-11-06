@@ -1,0 +1,50 @@
+name: CD
+on:
+  push:
+    branches: [main]
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: build image and push to docker hub
+        uses: docker/build-push-action@v1.1.0
+        # with:
+        #   username: ${{ secrets.DOCKER_USER }}
+        #   password: ${{ secrets.DOCKER_TOKEN }}
+        #   repository: marcosaureliofarias/sendemail
+        #   tags: ${{ github.sha }}, latest
+
+  # deploy:
+  #   name: Deploy
+  #   runs-on: ubuntu-latest
+  #   needs: build
+  #   steps:
+  #     - name: checkout
+  #       uses: actions/checkout@v2
+
+  #     - name: kustomize
+  #       uses: imranismail/setup-kustomize@v1
+  #       with:
+  #         kustomize_version: v3.6.1
+
+  #     - name: update k8s
+  #       run: |
+  #         cd kubernetes
+  #         kustomize edit set image thrower-sendemail=marcosaureliofarias/sendemail:${{ github.sha }}
+  #         cat kustomization.yml
+
+  #     - name: commit 
+  #       run: |
+  #         git config --local user.email "actions@github.com"
+  #         git config --local user.name "Deploy Action"
+  #         git commit -am "change image tag"
+
+  #     - name: push
+  #       uses: ad-m/github-push-action@master
+  #       with:
+  #         github_token: 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
+  #         branch: master
